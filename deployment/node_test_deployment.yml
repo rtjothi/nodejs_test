@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-test-deployment
+  labels:
+    app: nodejs-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-test
+  template:
+    metadata:
+      labels:
+        app: nodejs-test
+    spec:
+      containers:
+      - name: nodejs-test
+        image: icdsna/noejs_test:latest
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: icdsna
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-test-service
+spec:
+  selector:
+    app: nodejs-test
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
